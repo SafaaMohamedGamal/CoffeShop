@@ -60,7 +60,7 @@ class QuestionView extends Component {
 
   getByCategory= (id) => {
     $.ajax({
-      url: `/categories/${id}/questions`, //TODO: update request URL
+      url: `/categories/${parseInt(id)+1}/questions`, //TODO: update request URL
       type: "GET",
       success: (result) => {
         this.setState({
@@ -128,7 +128,7 @@ class QuestionView extends Component {
             {Object.keys(this.state.categories).map((id, ) => (
               <li key={id} onClick={() => {this.getByCategory(id)}}>
                 {this.state.categories[id]}
-                <img className="category" src={`${this.state.categories[id]}.svg`}/>
+                <img className="category" src={`${this.state.categories[id]}.svg`.toLowerCase()}/>
               </li>
             ))}
           </ul>
@@ -141,7 +141,7 @@ class QuestionView extends Component {
               key={q.id}
               question={q.question}
               answer={q.answer}
-              category={this.state.categories[q.category]} 
+              category={this.state.categories[q.category-1]}
               difficulty={q.difficulty}
               questionAction={this.questionAction(q.id)}
             />

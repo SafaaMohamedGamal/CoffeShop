@@ -3,14 +3,14 @@ import $ from 'jquery';
 
 import '../stylesheets/QuizView.css';
 
-const questionsPerPlay = 5; 
+const questionsPerPlay = 5;
 
 class QuizView extends Component {
   constructor(props){
     super();
     this.state = {
         quizCategory: null,
-        previousQuestions: [], 
+        previousQuestions: [],
         showAnswer: false,
         categories: {},
         numCorrect: 0,
@@ -35,7 +35,8 @@ class QuizView extends Component {
     })
   }
 
-  selectCategory = ({type, id=0}) => {
+  selectCategory = ({type, id=-1}) => {
+    id =  parseInt(id)+1
     this.setState({quizCategory: {type, id}}, this.getNextQuestion)
   }
 
@@ -90,7 +91,7 @@ class QuizView extends Component {
   restartGame = () => {
     this.setState({
       quizCategory: null,
-      previousQuestions: [], 
+      previousQuestions: [],
       showAnswer: false,
       numCorrect: 0,
       currentQuestion: {},
@@ -133,7 +134,8 @@ class QuizView extends Component {
   evaluateAnswer = () => {
     const formatGuess = this.state.guess.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").toLowerCase()
     const answerArray = this.state.currentQuestion.answer.toLowerCase().split(' ');
-    return answerArray.includes(formatGuess)
+    // return answerArray.includes(formatGuess)
+    return this.state.guess.toLowerCase()==this.state.currentQuestion.answer.toLowerCase()
   }
 
   renderCorrectAnswer(){
@@ -152,7 +154,7 @@ class QuizView extends Component {
   renderPlay(){
     return this.state.previousQuestions.length === questionsPerPlay || this.state.forceEnd
       ? this.renderFinalScore()
-      : this.state.showAnswer 
+      : this.state.showAnswer
         ? this.renderCorrectAnswer()
         : (
           <div className="quiz-play-holder">

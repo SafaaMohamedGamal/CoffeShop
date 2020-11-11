@@ -82,21 +82,79 @@ GET '/categories'
 - Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
 - Request Arguments: None
 - Returns: An object with a single key, categories, that contains a object of id: category_string key:value pairs.
-{'1' : "Science",
-'2' : "Art",
-'3' : "Geography",
-'4' : "History",
-'5' : "Entertainment",
-'6' : "Sports"}
+    {'1' : "Science",
+    '2' : "Art",
+    '3' : "Geography",
+    '4' : "History",
+    '5' : "Entertainment",
+    '6' : "Sports"}
+- Response Code: 200 if categories returned successfully
 
 GET '/questions'
 - Fetches a dictionary of paginated questions, so this end point uses argument 'page'
 - Request Arguments: 'page'
 - Returns: A json object that contains questions, total_questions, categories and current_Category
-as question: is the paginated questions returned,
-total_questions: is number of all exisiting questions,
-categories: all exisiting categories,
-current_Category: current category if specified
+    as question: is the paginated questions returned,
+    total_questions: is number of all exisiting questions,
+    categories: all exisiting categories,
+    current_Category: current category if specified
+- Response Code: 200 if questions returned successfully
+                or 404 if page number contains no questions
+
+GET '/categories/<int:category_id>/questions'
+- Fetches a dictionary of questions related to specific category
+- URL Parameters: category_id
+- Returns: A json object that contains questions, total_questions, categories and current_Category as:
+    question: is the questions related to category chosen,
+    total_questions: is number of all returned questions,
+    categories: all exisiting categories,
+    current_Category: current category specified
+- Response Code: 200 if questions returned successfully
+                or 404 if there is no questions or categories
+
+POST '/questions'
+- this endpoint is used for 2 reasons:
+    1-used to add question
+    2-used to search for questions with specific characters
+- Request Arguments:
+    1- Adding question: question, answer, difficulty, category as:
+        question: which is a string of a question to be added
+        answer: which is a string of an answer of this question
+        difficulty: it's a number describing the difficulty of the question
+        category: id of a category that question is related to
+    2- Search for a question: searchTerm
+        searchTerm: used to find all questions that contain this string
+- Returns:
+    1- Adding question: success, created
+        success: is a flag returns true if adding is done successfully
+        created: contains id of the question created
+    2- Search for a question: questions, total_questions, current_Category
+        question: questions containing the string searchTerm,
+        current_Category: current category if specified
+- Response Code:
+        1- Adding question:200 if questions created successfully
+                or 400 if one of the arguments not filled
+        2- Search for a question:200 if search is successful
+
+POST '/quizzes'
+- this endpoint is used for the play, it's used to accept category as an argument to limit type of questions to Play or choose from all categories too,
+    also accept previous questions so that a question only appear once
+- Request Arguments: previous_questions, quiz_category
+    previous_questions: id of answered question
+    quiz_category: object (dictionary) contains id and type of selected category
+- Returns: question, answer
+    question: contains one question or False
+    answer: contains answer of the question if exist or False
+- Response Code: 200 
+
+DELETE '/questions/<int:id>'
+- this endpoint is used to delete a specific question
+- URL Parameters: id of the question to be deleted
+- Returns:
+    success: is a flag returns true if deleting is done successfully
+    deleted: contains id of the question deleted
+- Response Code: 200 if questions deleted successfully
+                or 422 if id of the question not exist
 
 ```
 

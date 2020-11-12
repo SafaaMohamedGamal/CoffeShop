@@ -190,6 +190,9 @@ def create_app(test_config=None):
                 ~Question.id.in_(previousQuestions)).order_by(
                 func.random()).first()
         else:
+            category = Category.query.filter(Category.id == quizCategory).one_or_none()
+            if category is None:
+                abort(404)
             questions = Question.query.filter(
                 Question.category == quizCategory,
                 ~Question.id.in_(previousQuestions)).order_by(

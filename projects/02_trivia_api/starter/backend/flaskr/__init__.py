@@ -122,12 +122,15 @@ def create_app(test_config=None):
             category = body['category']
             if question == "" or answer == "" or difficulty == "" or category == "":
                 abort(400)
-            question = Question(
-                question=question,
-                answer=answer,
-                category=category,
-                difficulty=difficulty)
-            question.insert()
+            try:
+                question = Question(
+                    question=question,
+                    answer=answer,
+                    category=category,
+                    difficulty=difficulty)
+                question.insert()
+            except:
+                abort(400)
             return jsonify({
                 'success': True,
                 'created': question.id

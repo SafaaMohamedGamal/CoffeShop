@@ -15,7 +15,7 @@ class TriviaTestCase(unittest.TestCase):
         self.app = create_app()
         self.client = self.app.test_client
         self.database_name = "trivia_test"
-        self.database_path = "postgres://{}/{}".format(
+        self.database_path = "postgresql://{}/{}".format(
             'safaa:5433116@localhost:5432', self.database_name)
         setup_db(self.app, self.database_path)
 
@@ -55,16 +55,16 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['message'], 'not found')
     # 3
 
-    def test_delete_question_successful(self):
-        res = self.client().delete('/questions/2')
-        data = json.loads(res.data)
-        self.assertEqual(res.status_code, 200)
-        self.assertTrue(data['success'])
-        self.assertEqual(data['deleted'], 2)
+    # def test_delete_question_successful(self):
+    #     res = self.client().delete('/questions/2')
+    #     data = json.loads(res.data)
+    #     self.assertEqual(res.status_code, 200)
+    #     self.assertTrue(data['success'])
+    #     self.assertEqual(data['deleted'], 2)
     # 4
 
     def test_422_delete_question_failed(self):
-        res = self.client().delete('/questions/2000')
+        res = self.client().delete('/questions/6000')
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 422)
         self.assertFalse(data['success'])
@@ -78,7 +78,6 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertIsNotNone(data['questions'])
         self.assertIsNotNone(data['total_questions'])
-        self.assertIsNotNone(data['current_Category'])
     # 6
 
     def test_404_search_questions_empty(self):
@@ -127,16 +126,16 @@ class TriviaTestCase(unittest.TestCase):
                 'question': 'xxx',
                 'answer': 'ans',
                 'difficulty': 4,
-                'category': 31})
+                'category': 300})
         data = json.loads(res.data)
-        self.assertEqual(res.status_code, 500)
+        self.assertEqual(res.status_code, 400)
         self.assertFalse(data['success'])
-        self.assertEqual(data['error'], 500)
-        self.assertEqual(data['message'], 'internal server error')
+        self.assertEqual(data['error'], 400)
+        self.assertEqual(data['message'], 'bad request')
     # 10
 
     def test_get_questions_by_category_successful(self):
-        res = self.client().get('/categories/2/questions')
+        res = self.client().get('/categories/1/questions')
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertIsNotNone(data['questions'])
@@ -146,7 +145,7 @@ class TriviaTestCase(unittest.TestCase):
     # 11
 
     def test_get_questions_by_category_failed(self):
-        res = self.client().get('/categories/200/questions')
+        res = self.client().get('/categories/2000/questions')
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 404)
         self.assertFalse(data['success'])
@@ -163,6 +162,7 @@ class TriviaTestCase(unittest.TestCase):
                     'id': 1,
                     'type': 'Science'}})
         data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
         self.assertIsNotNone(data['question'])
         self.assertIsNotNone(data['answer'])
     # 13
@@ -173,9 +173,10 @@ class TriviaTestCase(unittest.TestCase):
             json={
                 'previous_questions': '',
                 'quiz_category': {
-                    'id': 0,
+                    'id': '0',
                     'type': 'click'}})
         data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
         self.assertIsNotNone(data['question'])
         self.assertIsNotNone(data['answer'])
     # 14
@@ -186,7 +187,7 @@ class TriviaTestCase(unittest.TestCase):
             json={
                 'previous_questions': '',
                 'quiz_category': {
-                    'id': 50,
+                    'id': 5000,
                     'type': 'click'}})
         data = json.loads(res.data)
         self.assertFalse(data['question'])
